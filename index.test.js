@@ -1,24 +1,28 @@
-const wait = require('./wait');
 const process = require('process');
 const cp = require('child_process');
 const path = require('path');
 
-test('throws invalid number', async () => {
-  await expect(wait('foo')).rejects.toThrow('milliseconds not a number');
-});
-
-test('wait 500 ms', async () => {
-  const start = new Date();
-  await wait(500);
-  const end = new Date();
-  var delta = Math.abs(end - start);
-  expect(delta).toBeGreaterThanOrEqual(500);
-});
-
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = 100;
+test('compare equal sem-vers', () => {
+  process.env['INPUT_FIRST'] = '1.2.3';
+  process.env['INPUT_SECOND'] = '1.2.3';
   const ip = path.join(__dirname, 'index.js');
   const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
-  console.log(result);
+  expect(result).toContain("result::0")
+})
+
+test('compare unequal sem-vers', () => {
+  process.env['INPUT_FIRST'] = '1.2.3';
+  process.env['INPUT_SECOND'] = '1.2.4';
+  const ip = path.join(__dirname, 'index.js');
+  const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
+  expect(result).toContain("result::-1")
+})
+
+test('compare sem-vers with operator', () => {
+  process.env['INPUT_FIRST'] = '1.2.3';
+  process.env['INPUT_SECOND'] = '1.2.4';
+  process.env['INPUT_OP'] = '>';
+  const ip = path.join(__dirname, 'index.js');
+  const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
+  expect(result).toContain("result::false")
 })

@@ -1,13 +1,18 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Compare Semvers'
+description: 'Compares two semantic versions'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  first:  # id of input
+    description: 'a semantic version'
     required: true
-    default: '1000'
+  second: # id of input
+    description: 'another semantic version'
+    required: true
+  op:
+    description: '< | > | <= | =>'
+    required: false
 outputs:
-  time: # output will be available to future steps
-    description: 'The current time after waiting'
+  result: # output will be available to future steps
+    description: 'If op is present, will be true or false; else will be -1, 0, or 1'
 runs:
   using: 'node16'
   main: 'dist/index.js'
