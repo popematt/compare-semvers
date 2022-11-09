@@ -1,18 +1,19 @@
 const core = require('@actions/core');
-const wait = require('./wait');
-
+const compare = require('compare-versions').compare
+const compareVersions = require('compare-versions').compareVersions
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const first = core.getInput('first', { required: true });
+    const second = core.getInput('second', { required: true });
+    const op = core.getInput('op')
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
-
-    core.setOutput('time', new Date().toTimeString());
+    if (op) {
+      core.setOutput('result', compare(first, second, op))
+    } else {
+      core.setOutput('result', compareVersions(first, second))
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
