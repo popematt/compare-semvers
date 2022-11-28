@@ -17,12 +17,3 @@ test('compare unequal sem-vers', () => {
   const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
   expect(result).toContain("result::-1")
 })
-
-test('compare sem-vers with operator', () => {
-  process.env['INPUT_FIRST'] = '1.2.3';
-  process.env['INPUT_SECOND'] = '1.2.4';
-  process.env['INPUT_OP'] = '>';
-  const ip = path.join(__dirname, 'index.js');
-  const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
-  expect(result).toContain("result::false")
-})
