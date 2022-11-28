@@ -2990,7 +2990,6 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(186);
-const compare = __nccwpck_require__(773).compare
 const compareVersions = __nccwpck_require__(773).compareVersions
 
 // most @actions toolkit packages have async methods
@@ -2998,13 +2997,8 @@ async function run() {
   try {
     const first = core.getInput('first', { required: true });
     const second = core.getInput('second', { required: true });
-    const op = core.getInput('op')
 
-    if (op) {
-      core.setOutput('result', compare(first, second, op))
-    } else {
-      core.setOutput('result', compareVersions(first, second))
-    }
+    core.setOutput('result', compareVersions(first, second))
   } catch (error) {
     core.setFailed(error.message);
   }
